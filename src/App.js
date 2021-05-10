@@ -19,6 +19,25 @@ function App({ tasks }) {
     setLocalTaskList(updatedTask)
   }
 
+  const deleteTask = (id) => {
+    const purgedTaskList = localTaskList.filter(task => {
+      if (id !== task.id) {
+        return task
+      }
+    })
+    setLocalTaskList(purgedTaskList)
+  }
+
+  const editTask = (id, newName) => {
+    const editedNamedTask = localTaskList.map(task => {
+      if (id === task.id) {
+        return {...task, name: newName}
+      }
+      return task
+    })
+    setLocalTaskList(editedNamedTask)
+  }
+
   const taskList = localTaskList.map(task => 
     <Todo 
       name={task.name} 
@@ -26,6 +45,8 @@ function App({ tasks }) {
       key={task.id} 
       id={task.id} 
       toggleTaskCompleted={toggleTaskCompleted}
+      editTask={editTask}
+      deleteTask={deleteTask}
       />
     );
 
