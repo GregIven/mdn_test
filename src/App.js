@@ -4,9 +4,31 @@ import FilterButton from './components/FilterButton';
 import Form from './components/Form';
 import Todo from './components/Todo';
 
+const FILTER_MAP = {
+  All: () => true,
+  Active: task => !task.completed,
+  Completed: task => task.completed
+}
+
+const FILTER_NAMES = Object.keys(FILTER_MAP);
+
+console.log(FILTER_NAMES)
+
 function App({ tasks }) {
 
   const [localTaskList, setLocalTaskList] = useState(tasks);
+  const [filter, setFilter] = useState('All');
+
+  const filterList = FILTER_NAMES.map(name => {
+    return (
+    <FilterButton 
+      key={name} 
+      name={name}
+      isPressed={name === filter}
+      setFilter={setFilter}
+    />
+    )
+  });
 
   const toggleTaskCompleted = (id) => {
     const updatedTask = localTaskList.map(task => {
@@ -38,7 +60,9 @@ function App({ tasks }) {
     setLocalTaskList(editedNamedTask)
   }
 
-  const taskList = localTaskList.map(task => 
+  const taskList = localTaskList
+  .filter(FILTER_MAP[filter])
+  .map(task => 
     <Todo 
       name={task.name} 
       completed={task.completed} 
@@ -63,9 +87,7 @@ function App({ tasks }) {
       <h1>TodoMatic</h1>
       <Form addNameFunc={handleTask} />
       <div className="filters btn-group stack-exception">
-        <FilterButton category="All" />
-        <FilterButton category="Completed" />
-        <FilterButton category="Remaining" />
+        {filterList}
       </div>
       <h2 id="list-heading">
         {headingText}

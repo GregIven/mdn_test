@@ -2,21 +2,33 @@ import React, { useState } from 'react'
 
 const Todo = ({ name, completed, id, toggleTaskCompleted, editTask, deleteTask }) => {
     const [isEditing, setEditing] = useState(false);
+    const [newName, setNewName] = useState('');
+
+    const handleNameChange = (e) => {
+        setNewName(e.target.value);
+    }
+
+    const handleNameSubmit = (e) => {
+        e.preventDefault();
+        editTask(id, newName)
+        setNewName("");
+        setEditing(false);
+    }
 
     const editingTemplate = (
-        <form className="stack-small">
+        <form className="stack-small" onSubmit={handleNameSubmit}>
             <div className="form-group">
                 <label className="todo-label" htmlFor={id}>
                     New name for {name}
                 </label>
-                <input id={id} className="todo-text" type="text" />
+                <input id={id} className="todo-text" type="text" onChange={handleNameChange} />
             </div>
             <div className="btn-group">
                 <button type="button" className="btn todo-cancel" onClick={() => setEditing(false)}>
                     Cancel
                     <span className="visually-hidden">renaming {name}</span>
                 </button>
-                <button type="submit" className="btn btn_primary todo-edit">
+                <button type="submit" className="btn btn_primary todo-edit" >
                     Save
                     <span className="visually-hidden">new name for {name} </span>
                 </button>
